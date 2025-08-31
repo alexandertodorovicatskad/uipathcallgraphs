@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import * as Plot from "@observablehq/plot";
+import { useEffect, useRef, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [selectedOption, setSelectedOption] = useState<string | undefined>("xaml");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const gods = [
+      "Chaos/Gaia/Mountains",
+      "Chaos/Gaia/Pontus",
+      "Chaos/Gaia/Uranus",
+      "Chaos/Gaia/Neptun",
+      "Chaos/Eros",
+      "Chaos/Toros",
+      "Chaos/Erebus",
+      "Chaos/Tartarus"
+    ];
+
+    const xaml = [
+      "Main/Process/Sonderfälle",
+      "Main/Process/GetAODRight",
+      "Main/Process/MatchAOD",
+      "Main/Process/FINN_Kontierung",
+      "Main/InitAllSettings",
+      "Main/InitAllApplications",
+      "Main/SetTransactionStatus",
+      "Main/Process"
+    ];
+
+
+    const plot = Plot.plot({
+      axis: null,
+      height: 100,
+      margin: 10,
+      marginLeft: 40,
+      marginRight: 120,
+      marks: [
+        Plot.tree(selectedOption === "gods" ? gods : xaml, { textStroke: "white" })
+      ]
+    });
+
+    containerRef.current?.append(plot);
+    return () => plot.remove();
+  }, [selectedOption]);
 
   return (
-    <>
+    <span>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h2>Visualize XAMLs</h2>
+        <label style={{ cursor: "pointer", marginLeft: 8 }}>
+          <input
+            id="view-gods"
+            type="radio"
+            name="view"
+            value="gods"
+            checked={selectedOption === "gods"}
+            onChange={() => setSelectedOption("gods")}
+            style={{ marginRight: 6 }}
+          />
+          Gods
+        </label>
+        <label style={{ cursor: "pointer", marginLeft: 8 }}>
+          <input
+            id="view-xaml"
+            type="radio"
+            name="view"
+            value="xaml"
+            checked={selectedOption === "xaml"}
+            onChange={() => setSelectedOption("xaml")}
+            style={{ marginRight: 6 }}
+          />
+          XAMLs
+        </label>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <div ref={containerRef} />
+    </span>
+  );
 }
-
-export default App
