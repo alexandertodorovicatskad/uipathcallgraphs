@@ -1,22 +1,26 @@
-import * as Plot from "@observablehq/plot";
-import { useEffect, useRef, useState } from "react";
-import { gods, erechnungen } from "./graphs";
+import * as Plot from '@observablehq/plot';
+import { useEffect, useRef, useState } from 'react';
+import { gods, erechnungen } from './graphs';
 
 export default function App() {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>("gods");
+  const [selectedOption, setSelectedOption] = useState<string | undefined>('gods');
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-
     const plot = Plot.plot({
       axis: null,
-      height: 100,
+      // height: 600,
       margin: 10,
       marginLeft: 40,
       marginRight: 120,
       marks: [
-        Plot.tree(selectedOption === "gods" ? gods : erechnungen, { textStroke: "white", fill: "steelblue" })
-      ]
+        Plot.tree(selectedOption === 'gods' ? gods : erechnungen, {
+          textStroke: 'white',
+          fill: 'steelblue',
+          stroke: 'blue',
+          strokeWidth: 1,
+        }),
+      ],
     });
 
     containerRef.current?.append(plot);
@@ -24,45 +28,49 @@ export default function App() {
   }, [selectedOption]);
 
   return (
-    <main>
-      <section className="flex mt-4">
-        <fieldset className="border border-gray-300 p-2 rounded ">
+    <main className="flex flex-col h-screen">
+      <section className="p-2">
+        <fieldset className="flex flex-row justify-center rounded border border-cyan-400 p-2">
           <legend>XAML graphs</legend>
           <div>
-            <label style={{ cursor: "pointer", marginLeft: 8 }}>
+            <label className="cursor-pointer ml-2">
               <input
                 id="view-gods"
                 type="radio"
                 name="view"
                 value="gods"
-                checked={selectedOption === "gods"}
-                onChange={() => setSelectedOption("gods")}
+                checked={selectedOption === 'gods'}
+                onChange={() => setSelectedOption('gods')}
                 style={{ marginRight: 6 }}
+                className="mr-1"
               />
-              {selectedOption === "gods" ? "Gods" : "Gods"}
+              {selectedOption === 'gods' ? 'Gods' : 'Gods'}
             </label>
           </div>
           <div>
-            <label style={{ cursor: "pointer", marginLeft: 8 }}>
+            <label className="cursor-pointer ml-2">
               <input
                 id="view-erechnungen"
                 type="radio"
                 name="view"
                 value="erechnungen"
-                checked={selectedOption === "erechnungen"}
-                onChange={() => setSelectedOption("erechnungen")}
+                checked={selectedOption === 'erechnungen'}
+                onChange={() => setSelectedOption('erechnungen')}
                 style={{ marginRight: 6 }}
+                className="mr-1"
               />
-              {selectedOption === "erechnungen" ? "E-Rechnungen" : "E-Rechnungen"}
+              {selectedOption === 'erechnungen' ? 'E-Rechnungen' : 'E-Rechnungen'}
             </label>
           </div>
         </fieldset>
       </section>
-      <section className="mt-4">
-        <h2 className="text-xl font-semibold">{selectedOption}</h2>
-        <div id="content" ref={containerRef} >
-          {/* <p>Select an option above to see the process graph.</p> */}
-        </div>
+      <section className="flex flex-col flex-1 min-h-0 p-2 overflow-hidden">
+        <h2 className="text-xl font-semibold mb-2">{selectedOption}</h2>
+        <div
+          id="content"
+          ref={containerRef}
+          className="flex-1 min-h-0 min-w-0 overflow-auto rounded border border-gray-300"
+        />
       </section>
     </main>
   );
