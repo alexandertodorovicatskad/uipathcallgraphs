@@ -9,7 +9,7 @@ export default function App() {
   useEffect(() => {
     const plot = Plot.plot({
       axis: null,
-      // height: 600,
+      height: 800,
       margin: 10,
       marginLeft: 40,
       marginRight: 120,
