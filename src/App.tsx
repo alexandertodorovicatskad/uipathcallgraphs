@@ -7,9 +7,21 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+
+    // compute height based on number of elements
+    const data = selectedOption === 'gods' ? gods : erechnungen;
+    const items = Array.isArray(data) ? data.length : 0;
+    const perItem = 18; // px per item (tweak as needed)
+    const padding = 120; // room for margins, labels, etc.
+    const minHeight = 300;
+    const maxHeight = 2200;
+    const height = Math.max(minHeight, Math.min(maxHeight, items * perItem + padding));
+
+
     const plot = Plot.plot({
       axis: null,
-      height: 800,
+      height,
+      // height: 800,
       margin: 10,
       marginLeft: 40,
       marginRight: 120,
@@ -17,6 +29,7 @@ export default function App() {
         Plot.tree(selectedOption === 'gods' ? gods : erechnungen, {
           textStroke: 'white',
           fill: 'steelblue',
+          // treeSort: "node:height",
           stroke: 'blue',
           strokeWidth: 1,
         }),
