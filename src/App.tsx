@@ -1,22 +1,36 @@
 import * as Plot from '@observablehq/plot';
 import { useEffect, useRef, useState } from 'react';
-import { gods, erechnungen } from './graphs';
+import { erechnungen, rpaaktencloud, neuzuweisungen } from './graphs';
+import RadioButton from './components/RadioButton';
 
 export default function App() {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>('gods');
+  const [selectedOption, setSelectedOption] = useState<string | undefined>('rpaaktencloud');
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
 
+    const data = (() => {
+      switch (selectedOption) {
+        case 'erechnungen':
+          return erechnungen;
+        case 'rpaaktencloud':
+          return rpaaktencloud;
+        case 'neuzuweisungen':
+          return neuzuweisungen;
+        default:
+          return rpaaktencloud;
+      }
+    })();
+
+    console.log('Selected option:', selectedOption, data, data.length);
+
     // compute height based on number of elements
-    const data = selectedOption === 'gods' ? gods : erechnungen;
     const items = Array.isArray(data) ? data.length : 0;
     const perItem = 18; // px per item (tweak as needed)
     const padding = 120; // room for margins, labels, etc.
     const minHeight = 300;
     const maxHeight = 2200;
     const height = Math.max(minHeight, Math.min(maxHeight, items * perItem + padding));
-
 
     const plot = Plot.plot({
       axis: null,
@@ -26,10 +40,9 @@ export default function App() {
       marginLeft: 40,
       marginRight: 120,
       marks: [
-        Plot.tree(selectedOption === 'gods' ? gods : erechnungen, {
+        Plot.tree(data, {
           textStroke: 'white',
           fill: 'steelblue',
-          // treeSort: "node:height",
           stroke: 'blue',
           strokeWidth: 1,
         }),
@@ -45,38 +58,33 @@ export default function App() {
       <section className="p-2">
         <fieldset className="flex flex-row justify-center rounded border border-cyan-400 p-2">
           <legend>XAML graphs</legend>
-          <div>
-            <label className="cursor-pointer ml-2">
-              <input
-                id="view-gods"
-                type="radio"
-                name="view"
-                value="gods"
-                checked={selectedOption === 'gods'}
-                onChange={() => setSelectedOption('gods')}
-                style={{ marginRight: 6 }}
-                className="mr-1"
-              />
-              {selectedOption === 'gods' ? 'Gods' : 'Gods'}
-            </label>
-          </div>
-          <div>
-            <label className="cursor-pointer ml-2">
-              <input
-                id="view-erechnungen"
-                type="radio"
-                name="view"
-                value="erechnungen"
-                checked={selectedOption === 'erechnungen'}
-                onChange={() => setSelectedOption('erechnungen')}
-                style={{ marginRight: 6 }}
-                className="mr-1"
-              />
-              {selectedOption === 'erechnungen' ? 'E-Rechnungen' : 'E-Rechnungen'}
-            </label>
-          </div>
+          <RadioButton
+            id="view-erechnungen"
+            name="view"
+            value="erechnungen"
+            label="E-Rechnungen"
+            selectedOption={selectedOption}
+            onChange={() => setSelectedOption('erechnungen')}
+          />
+          <RadioButton
+            id="view-rpaaktencloud"
+            name="view"
+            value="rpaaktencloud"
+            label="RPA Akten Cloud"
+            selectedOption={selectedOption}
+            onChange={() => setSelectedOption('rpaaktencloud')}
+          />
+          <RadioButton
+            id="view-neuzuweisungen"
+            name="view"
+            value="neuzuweisungen"
+            label="Neuzuweisungen"
+            selectedOption={selectedOption}
+            onChange={() => setSelectedOption('neuzuweisungen')}
+          />
         </fieldset>
       </section>
+      {/* Create a component Graph.tsx for this section */}
       <section className="flex flex-col flex-1 min-h-0 p-2 overflow-hidden">
         <h2 className="text-xl font-semibold mb-2">{selectedOption}</h2>
         <div

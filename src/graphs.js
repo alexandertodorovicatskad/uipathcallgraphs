@@ -1,14 +1,3 @@
-export const gods = [
-    "Chaos/Gaia/Mountains",
-    "Chaos/Gaia/Pontus",
-    "Chaos/Gaia/Uranus",
-    "Chaos/Gaia/Neptun",
-    "Chaos/Eros",
-    "Chaos/Toros",
-    "Chaos/Erebus",
-    "Chaos/Tartarus"
-];
-
 export const erechnungen = [
     "Main.xaml/Framework/GetTransactionData.xaml",
     "Main.xaml/Framework/Process.xaml",
@@ -65,3 +54,19 @@ export const erechnungen = [
     "Tests/GetTransactionDataTestCase.xaml/Framework/GetTransactionData.xaml",
     "FINN/FINN_SucheRechnung.xaml/FINN/FINN_Zuweisung.xaml"
 ];
+
+export const rpaaktencloud = [
+  "Main.xaml/SecureBoxBayern/Login.xaml",
+  "Main.xaml/SecureBoxBayern/Logout.xaml",
+  "Main.xaml/WorkProcess/CreatePDFFolder.xaml",
+  "Main.xaml/WorkProcess/Process.xaml",
+  "WorkProcess/Process.xaml/Email/SendEmail.xaml",
+  "WorkProcess/Process.xaml/WorkProcess/DeleteDocuments.xaml",
+  "WorkProcess/Process.xaml/WorkProcess/ExtractDateOfBirth.xaml",
+  "WorkProcess/Process.xaml/WorkProcess/ReadName.xaml"
+]
+
+export const neuzuweisungen = [
+  "Zuweisungen.xaml/Email.xaml",
+  "Zuweisungen.xaml/ReadAsText.xaml"
+]
