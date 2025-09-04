@@ -1,11 +1,40 @@
 import * as Plot from '@observablehq/plot';
 import { useEffect, useRef, useState } from 'react';
-import { erechnungenperformer, erechnungendispatcher, rpaaktencloud, neuzuweisungen, einbuergerungbzr, einbuergerungdispatcher, einbuergerungperformer } from './graphs';
+import {
+  erechnungenperformer, erechnungendispatcher, rpaaktencloud, neuzuweisungen, einbuergerungbzr,
+  einbuergerungdispatcher, einbuergerungperformer, pachtvertragdispatcher, pachtvertragperformer,
+  wohngeldperformer, wohngeldperformerrv1, wohngeldperformerrv2, wohngeldemailloader, wohngelddudispatcher,
+  wohngeldduantraege
+} from './graphs';
 import RadioButton from './components/RadioButton';
 
 export default function App() {
   const [selectedOption, setSelectedOption] = useState<string | undefined>('rpaaktencloud');
+  const [filter, setFilter] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const options = [
+    { id: 'view-erechnungenperformer', value: 'erechnungenperformer', label: 'E-Rechnungen Performer' },
+    { id: 'view-erechnungendispatcher', value: 'erechnungendispatcher', label: 'E-Rechnung Dispatcher' },
+    { id: 'view-rpaaktencloud', value: 'rpaaktencloud', label: 'RPA Akten Cloud' },
+    { id: 'view-neuzuweisungen', value: 'neuzuweisungen', label: 'Neuzuweisungen' },
+    { id: 'view-einbuergerungbzr', value: 'einbuergerungbzr', label: 'Einbürgerung BZR' },
+    { id: 'view-einbuergerungdispatcher', value: 'einbuergerungdispatcher', label: 'Einbürgerung Dispatcher' },
+    { id: 'view-einbuergerungperformer', value: 'einbuergerungperformer', label: 'Einbürgerung Performer' },
+    { id: 'view-pachtvertragdispatcher', value: 'pachtvertragdispatcher', label: 'Pachtvertrag Dispatcher' },
+    { id: 'view-pachtvertragperformer', value: 'pachtvertragperformer', label: 'Pachtvertrag Performer' },
+    { id: 'view-wohngeldperformer', value: 'wohngeldperformer', label: 'Wohngeld Performer' },
+    { id: 'view-wohngeldperformerrv1', value: 'wohngeldperformerrv1', label: 'Wohngeld Performer RV1' },
+    { id: 'view-wohngeldperformerrv2', value: 'wohngeldperformerrv2', label: 'Wohngeld Performer RV2' },
+    { id: 'view-wohngeldemailloader', value: 'wohngeldemailloader', label: 'Wohngeld Email Loader' },
+    { id: 'view-wohngelddudispatcher', value: 'wohngelddudispatcher', label: 'Wohngeld DU Dispatcher' },
+    { id: 'view-wohngeldduantraege', value: 'wohngeldduantraege', label: 'Wohngeld DU Anträge' },
+    // { id: 'view-stempeln', value: 'stempeln', label: 'Stempeln' },
+    // add more here if needed
+  ];
+
+  const filtered = options.filter(o => o.label.toLowerCase().includes(filter.toLowerCase()) || o.value.toLowerCase().includes(filter.toLowerCase()));
+
 
   useEffect(() => {
 
@@ -25,6 +54,25 @@ export default function App() {
           return einbuergerungdispatcher;
         case 'einbuergerungperformer':
           return einbuergerungperformer;
+        case 'pachtvertragdispatcher':
+          return pachtvertragdispatcher;
+        case 'pachtvertragperformer':
+          return pachtvertragperformer;
+        case 'wohngeldperformer':
+          return wohngeldperformer;
+        case 'wohngeldperformerrv1':
+          return wohngeldperformerrv1;
+        case 'wohngeldperformerrv2':
+          return wohngeldperformerrv2;
+        case 'wohngeldemailloader':
+          return wohngeldemailloader;
+        case 'wohngelddudispatcher':
+          return wohngelddudispatcher;
+        case 'wohngeldduantraege':
+          return wohngeldduantraege;
+        // case 'stempeln':
+        //   return stempeln;
+        // add more here if needed
         default:
           return rpaaktencloud;
       }
@@ -64,66 +112,39 @@ export default function App() {
   return (
     <main className="flex flex-col h-screen">
       <section className="p-2">
-        <fieldset className="flex flex-row justify-center rounded border border-cyan-400 p-2">
-          <legend>XAML graphs</legend>
-          <RadioButton
-            id="view-erechnungenperformer"
-            name="view"
-            value="erechnungenperformer"
-            label="E-Rechnungen Performer"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('erechnungenperformer')}
-          />
-          <RadioButton
-            id="view-erechnungendispatcher"
-            name="view"
-            value="erechnungendispatcher"
-            label="E-Rechnung Dispatcher"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('erechnungendispatcher')}
-          />
-          <RadioButton
-            id="view-rpaaktencloud"
-            name="view"
-            value="rpaaktencloud"
-            label="RPA Akten Cloud"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('rpaaktencloud')}
-          />
-          <RadioButton
-            id="view-neuzuweisungen"
-            name="view"
-            value="neuzuweisungen"
-            label="Neuzuweisungen"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('neuzuweisungen')}
-          />
-          <RadioButton
-            id="view-einbuergerungbzr"
-            name="view"
-            value="einbuergerungbzr"
-            label="Einbürgerung BZR"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('einbuergerungbzr')}
-          />
-          <RadioButton
-            id="view-einbuergerungdispatcher"
-            name="view"
-            value="einbuergerungdispatcher"
-            label="Einbürgerung Dispatcher"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('einbuergerungdispatcher')}
-          />
-          <RadioButton
-            id="view-einbuergerungperformer"
-            name="view"
-            value="einbuergerungperformer"
-            label="Einbürgerung Performer"
-            selectedOption={selectedOption}
-            onChange={() => setSelectedOption('einbuergerungperformer')}
-          />
+        <fieldset className="rounded border border-cyan-400 p-2">
+          <legend className="ml-2">XAML graphs</legend>
+
+          <div className="flex gap-2 items-center mb-2">
+            <input
+              type="search"
+              placeholder="Filter..."
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="px-2 py-1 border rounded text-sm w-full max-w-sm"
+              aria-label="Filter graphs"
+            />
+            <div className="text-sm text-gray-500">Showing {filtered.length} / {options.length}</div>
+          </div>
+
+          {/* responsive multi-column grid with scroll when too many items */}
+          <div className="grid gap-2 auto-rows-min grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 overflow-auto max-h-40 p-1">
+            {filtered.map(opt => (
+              <RadioButton
+                key={opt.id}
+                id={opt.id}
+                name="view"
+                value={opt.value}
+                label={opt.label}
+                selectedOption={selectedOption}
+                onChange={(v) => setSelectedOption(v)}
+                className="text-xs"
+              />
+            ))}
+          </div>
         </fieldset>
       </section>
+
       {/* Create a component Graph.tsx for this section */}
       <section className="flex flex-col flex-1 min-h-0 p-2 overflow-hidden">
         <h2 className="text-xl font-semibold mb-2">{selectedOption}</h2>

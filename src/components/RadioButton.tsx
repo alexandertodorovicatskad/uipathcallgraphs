@@ -23,7 +23,7 @@ export default function RadioButton({
 }: RadioButtonProps) {
     return (
         <div>
-            <label className={`cursor-pointer ml-2 ${className ?? ''}`}>
+            <label className={`cursor-pointer ml-2 text-xs ${className ?? ''}`}>
                 <input
                     id={id}
                     type="radio"
