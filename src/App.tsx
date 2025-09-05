@@ -93,8 +93,8 @@ export default function App() {
       height,
       // height: 800,
       margin: 10,
-      marginLeft: 40,
-      marginRight: 120,
+      marginLeft: 160,
+      marginRight: 160,
       marks: [
         Plot.tree(data, {
           textStroke: 'white',
@@ -104,6 +104,9 @@ export default function App() {
         }),
       ],
     });
+
+    // allow labels that extend beyond the SVG box to remain visible
+    plot.style.overflow = 'visible';
 
     containerRef.current?.append(plot);
     return () => plot.remove();
