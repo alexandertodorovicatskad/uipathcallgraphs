@@ -113,48 +113,53 @@ export default function App() {
   }, [selectedOption]);
 
   return (
-    <main className="flex flex-col h-screen">
-      <section className="p-2">
-        <fieldset className="rounded border border-cyan-400 p-2">
-          <legend className="ml-2">XAML graphs</legend>
+    <main className="flex flex-col h-screen bg-white text-gray-900">
+      <section className="p-4">
+        <fieldset className="rounded-xl border border-cyan-200 p-4 bg-white shadow-sm">
+          <legend className="ml-2 px-2 text-sm font-semibold text-cyan-700">XAML graphs</legend>
 
-          <div className="flex gap-2 items-center mb-2">
+          <div className="flex gap-3 items-center mb-3">
             <input
               type="search"
-              placeholder="Filter..."
+              placeholder="Filter graphs (name or id)"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-2 py-1 border rounded text-sm w-full max-w-sm"
+              className="px-3 py-2 border rounded-lg text-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-300"
               aria-label="Filter graphs"
             />
-            <div className="text-sm text-gray-500">Showing {filtered.length} / {options.length}</div>
+            <div className="text-sm text-gray-500">Showing <span className="font-medium text-gray-800">{filtered.length}</span> of <span className="text-gray-600">{options.length}</span></div>
           </div>
 
           {/* responsive multi-column grid with scroll when too many items */}
-          <div className="grid gap-2 auto-rows-min grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 overflow-auto max-h-40 p-1">
+          <div className="grid gap-2 auto-rows-min grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 overflow-auto max-h-44 p-1">
             {filtered.map(opt => (
-              <RadioButton
-                key={opt.id}
-                id={opt.id}
-                name="view"
-                value={opt.value}
-                label={opt.label}
-                selectedOption={selectedOption}
-                onChange={(v) => setSelectedOption(v)}
-                className="text-xs"
-              />
+              <div key={opt.id} className="p-0.5">
+                <RadioButton
+                  id={opt.id}
+                  name="view"
+                  value={opt.value}
+                  label={opt.label}
+                  selectedOption={selectedOption}
+                  onChange={(v) => setSelectedOption(v)}
+                  className="text-sm block"
+                />
+              </div>
             ))}
           </div>
         </fieldset>
       </section>
 
-      {/* Create a component Graph.tsx for this section */}
-      <section className="flex flex-col flex-1 min-h-0 p-2 overflow-hidden">
-        <h2 className="text-xl font-semibold mb-2">{selectedOption}</h2>
+      {/* Graph container */}
+      <section className="flex flex-col flex-1 min-h-0 p-4 overflow-hidden">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-xl font-semibold tracking-tight text-gray-800">{selectedOption}</h2>
+          <div className="text-sm text-gray-500">Nodes: <span className="font-medium text-gray-700">--</span></div>
+        </div>
+
         <div
           id="content"
           ref={containerRef}
-          className="flex-1 min-h-0 min-w-0 overflow-auto rounded border border-gray-300"
+          className="flex-1 min-h-0 min-w-0 overflow-auto rounded-lg border border-gray-200 bg-white shadow-inner p-4"
         />
       </section>
     </main>
