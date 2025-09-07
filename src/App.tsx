@@ -11,6 +11,7 @@ import RadioButton from './components/RadioButton';
 export default function App() {
   const [selectedOption, setSelectedOption] = useState<string | undefined>('rpaaktencloud');
   const [filter, setFilter] = useState('');
+  const [nodeCount, setNodeCount] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const options = [
@@ -82,6 +83,8 @@ export default function App() {
 
     // compute height based on number of elements
     const items = Array.isArray(data) ? data.length : 0;
+    // publish node count for the header
+    setNodeCount(items);
     const perItem = 18; // px per item (tweak as needed)
     const padding = 80; // room for margins, labels, etc.
     const minHeight = 300;
@@ -153,7 +156,7 @@ export default function App() {
       <section className="flex flex-col flex-1 min-h-0 p-4 overflow-hidden">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-semibold tracking-tight text-gray-800">{selectedOption}</h2>
-          <div className="text-sm text-gray-500">Nodes: <span className="font-medium text-gray-700">--</span></div>
+          <div className="text-sm text-gray-500">Nodes: <span className="font-medium text-gray-700">{nodeCount ?? '--'}</span></div>
         </div>
 
         <div
