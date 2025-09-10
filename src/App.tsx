@@ -1,6 +1,6 @@
 import * as Plot from '@observablehq/plot';
 import { useEffect, useRef, useState } from 'react';
-import graphs from './graphs';
+import graphs from './data/graphs';
 import RadioButton from './components/RadioButton';
 
 export default function App() {
