@@ -1,83 +1,45 @@
 import * as Plot from '@observablehq/plot';
 import { useEffect, useRef, useState } from 'react';
-import {
-  erechnungenperformer, erechnungendispatcher, rpaaktencloud, neuzuweisungen, einbuergerungbzr,
-  einbuergerungdispatcher, einbuergerungperformer, pachtvertragdispatcher, pachtvertragperformer,
-  wohngeldperformer, wohngeldperformerrv1, wohngeldperformerrv2, wohngeldemailloader, wohngelddudispatcher,
-  wohngeldduantraege
-} from './graphs';
+import graphs from './graphs';
 import RadioButton from './components/RadioButton';
 
 export default function App() {
   const [selectedOption, setSelectedOption] = useState<string | undefined>('rpaaktencloud');
   const [filter, setFilter] = useState('');
   const [nodeCount, setNodeCount] = useState<number | null>(null);
+  // initialize graphTitle from the matching graph's description (fallback to a sensible default)
+  const _defaultGraph = Array.isArray(graphs)
+    ? graphs.find((g: any) => String(g.title).toLowerCase() === String((selectedOption ?? '')).toLowerCase())
+    || graphs.find((g: any) => String(g.title).toLowerCase() === 'rpaaktencloud')
+    : undefined;
+  const [graphTitle, setGraphTitle] = useState<string | undefined>(_defaultGraph?.description ?? undefined);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const options = [
-    { id: 'view-erechnungenperformer', value: 'erechnungenperformer', label: 'E-Rechnungen Performer' },
-    { id: 'view-erechnungendispatcher', value: 'erechnungendispatcher', label: 'E-Rechnung Dispatcher' },
-    { id: 'view-rpaaktencloud', value: 'rpaaktencloud', label: 'RPA Akten Cloud' },
-    { id: 'view-neuzuweisungen', value: 'neuzuweisungen', label: 'Neuzuweisungen' },
-    { id: 'view-einbuergerungbzr', value: 'einbuergerungbzr', label: 'Einbürgerung BZR' },
-    { id: 'view-einbuergerungdispatcher', value: 'einbuergerungdispatcher', label: 'Einbürgerung Dispatcher' },
-    { id: 'view-einbuergerungperformer', value: 'einbuergerungperformer', label: 'Einbürgerung Performer' },
-    { id: 'view-pachtvertragdispatcher', value: 'pachtvertragdispatcher', label: 'Pachtvertrag Dispatcher' },
-    { id: 'view-pachtvertragperformer', value: 'pachtvertragperformer', label: 'Pachtvertrag Performer' },
-    { id: 'view-wohngeldperformer', value: 'wohngeldperformer', label: 'Wohngeld Performer' },
-    { id: 'view-wohngeldperformerrv1', value: 'wohngeldperformerrv1', label: 'Wohngeld Performer RV1' },
-    { id: 'view-wohngeldperformerrv2', value: 'wohngeldperformerrv2', label: 'Wohngeld Performer RV2' },
-    { id: 'view-wohngeldemailloader', value: 'wohngeldemailloader', label: 'Wohngeld Email Loader' },
-    { id: 'view-wohngelddudispatcher', value: 'wohngelddudispatcher', label: 'Wohngeld DU Dispatcher' },
-    { id: 'view-wohngeldduantraege', value: 'wohngeldduantraege', label: 'Wohngeld DU Anträge' },
-    // { id: 'view-stempeln', value: 'stempeln', label: 'Stempeln' },
-    // add more here if needed
-  ];
+  const options = graphs.map((g: any) => ({
+    id: `view-${g.title.toLowerCase().replace(/[^a-z0-9]+/g, '')}`,
+    value: g.title,
+    label: g.description
+  }));
 
-  const filtered = options.filter(o => o.label.toLowerCase().includes(filter.toLowerCase()) || o.value.toLowerCase().includes(filter.toLowerCase()));
-
+  const filtered = options.filter((o: any) => o.label.toLowerCase().includes(filter.toLowerCase()) || o.value.toLowerCase().includes(filter.toLowerCase()));
 
   useEffect(() => {
+    const selectedTitle = (selectedOption ?? '').toLowerCase();
+    const matched = Array.isArray(graphs)
+      ? graphs.find((g: any) => String(g.title).toLowerCase() === selectedTitle)
+      : undefined;
+    const fallback = Array.isArray(graphs)
+      ? graphs.find((g: any) => String(g.title).toLowerCase() === 'rpaaktencloud')
+      : undefined;
+    const data: string[] = Array.isArray(matched?.graph)
+      ? matched.graph
+      : Array.isArray(fallback?.graph)
+        ? fallback.graph
+        : [];
 
-    const data = (() => {
-      switch (selectedOption) {
-        case 'erechnungenperformer':
-          return erechnungenperformer;
-        case 'erechnungendispatcher':
-          return erechnungendispatcher;
-        case 'rpaaktencloud':
-          return rpaaktencloud;
-        case 'neuzuweisungen':
-          return neuzuweisungen;
-        case 'einbuergerungbzr':
-          return einbuergerungbzr;
-        case 'einbuergerungdispatcher':
-          return einbuergerungdispatcher;
-        case 'einbuergerungperformer':
-          return einbuergerungperformer;
-        case 'pachtvertragdispatcher':
-          return pachtvertragdispatcher;
-        case 'pachtvertragperformer':
-          return pachtvertragperformer;
-        case 'wohngeldperformer':
-          return wohngeldperformer;
-        case 'wohngeldperformerrv1':
-          return wohngeldperformerrv1;
-        case 'wohngeldperformerrv2':
-          return wohngeldperformerrv2;
-        case 'wohngeldemailloader':
-          return wohngeldemailloader;
-        case 'wohngelddudispatcher':
-          return wohngelddudispatcher;
-        case 'wohngeldduantraege':
-          return wohngeldduantraege;
-        // case 'stempeln':
-        //   return stempeln;
-        // add more here if needed
-        default:
-          return rpaaktencloud;
-      }
-    })();
+    // extract description from matched or fallback (fall back to title or selectedOption if missing)
+    const extractedDescription = matched?.description ?? fallback?.description ?? matched?.title ?? selectedOption;
+    setGraphTitle(extractedDescription ? String(extractedDescription) : undefined);
 
     console.log('Selected option:', selectedOption, data, data.length);
 
@@ -94,7 +56,6 @@ export default function App() {
     const plot = Plot.plot({
       axis: null,
       height,
-      // height: 800,
       margin: 10,
       marginLeft: 160,
       marginRight: 160,
@@ -108,9 +69,7 @@ export default function App() {
       ],
     });
 
-    // allow labels that extend beyond the SVG box to remain visible
     plot.style.overflow = 'visible';
-
     containerRef.current?.append(plot);
     return () => plot.remove();
   }, [selectedOption]);
@@ -135,7 +94,7 @@ export default function App() {
 
           {/* responsive multi-column grid with scroll when too many items */}
           <div className="grid gap-2 auto-rows-min grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 overflow-auto max-h-44 p-1">
-            {filtered.map(opt => (
+            {filtered.map((opt: any) => (
               <div key={opt.id} className="p-0.5">
                 <RadioButton
                   id={opt.id}
@@ -155,7 +114,7 @@ export default function App() {
       {/* Graph container */}
       <section className="flex flex-col flex-1 min-h-0 p-4 overflow-hidden">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-semibold tracking-tight text-gray-800">{selectedOption}</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-gray-800">{graphTitle ?? selectedOption}</h2>
           <div className="text-sm text-gray-500">Nodes: <span className="font-medium text-gray-700">{nodeCount ?? '--'}</span></div>
         </div>
 

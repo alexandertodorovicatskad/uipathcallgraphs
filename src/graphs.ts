@@ -1,21 +1,28 @@
-// Simple shim: import the JS module and re-export its named properties.
-// We use `any` for the exports to avoid typing the data structure.
-import * as graphs from './graphs.js';
+// Import the new graphs array and expose backward-compatible named exports.
+// Import namespace and read the named `graphs` export.
+import * as graphsModule from './graphs.js';
+const graphs: any = (graphsModule as any).graphs;
 
-export const erechnungenperformer: any = (graphs as any).erechnungenperformer;
-export const erechnungendispatcher: any = (graphs as any).erechnungendispatcher;
-export const rpaaktencloud: any = (graphs as any).rpaaktencloud;
-export const neuzuweisungen: any = (graphs as any).neuzuweisungen;
-export const einbuergerungbzr: any = (graphs as any).einbuergerungbzr;
-export const einbuergerungdispatcher: any = (graphs as any).einbuergerungdispatcher;
-export const einbuergerungperformer: any = (graphs as any).einbuergerungperformer;
-export const pachtvertragdispatcher: any = (graphs as any).pachtvertragdispatcher;
-export const pachtvertragperformer: any = (graphs as any).pachtvertragperformer;
-export const wohngeldperformer: any = (graphs as any).wohngeldperformer;
-export const wohngeldperformerrv1: any = (graphs as any).wohngeldperformerrv1;
-export const wohngeldperformerrv2: any = (graphs as any).wohngeldperformerrv2;
-export const wohngeldemailloader: any = (graphs as any).wohngeldemailloader;
-export const wohngelddudispatcher: any = (graphs as any).wohngelddudispatcher;
-export const wohngeldduantraege: any = (graphs as any).wohngeldduantraege;
+type GraphEntry = { id: number; title: string; description?: string; graph: any[] };
+
+const byKey = new Map<string, any[]>(
+  (graphs as GraphEntry[]).map((g) => [g.title.toLowerCase(), g.graph]),
+);
+
+export const erechnungenperformer: any = byKey.get('erechnungenperformer') ?? [];
+export const erechnungendispatcher: any = byKey.get('erechnungendispatcher') ?? [];
+export const rpaaktencloud: any = byKey.get('rpaaktencloud') ?? [];
+export const neuzuweisungen: any = byKey.get('neuzuweisungen') ?? [];
+export const einbuergerungbzr: any = byKey.get('einbuergerungbzr') ?? [];
+export const einbuergerungdispatcher: any = byKey.get('einbuergerungdispatcher') ?? [];
+export const einbuergerungperformer: any = byKey.get('einbuergerungperformer') ?? [];
+export const pachtvertragdispatcher: any = byKey.get('pachtvertragdispatcher') ?? [];
+export const pachtvertragperformer: any = byKey.get('pachtvertragperformer') ?? [];
+export const wohngeldperformer: any = byKey.get('wohngeldperformer') ?? [];
+export const wohngeldperformerrv1: any = byKey.get('wohngeldperformerrv1') ?? [];
+export const wohngeldperformerrv2: any = byKey.get('wohngeldperformerrv2') ?? [];
+export const wohngeldemailloader: any = byKey.get('wohngeldemailloader') ?? [];
+export const wohngelddudispatcher: any = byKey.get('wohngelddudispatcher') ?? [];
+export const wohngeldduantraege: any = byKey.get('wohngeldduantraege') ?? [];
 
 export default graphs as any;

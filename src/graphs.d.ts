@@ -1,4 +1,5 @@
 declare module './graphs' {
+  export const graphs: Array<{ id: number; title: string; description?: string; graph: any[] }>;
   export const erechnungenperformer: any;
   export const erechnungendispatcher: any;
   export const rpaaktencloud: any;
